@@ -1,0 +1,6 @@
+https://www.weatherbit.io/account/dashboard
+inc.getweb@gmail.com
+getwebinc!@#
+key: 51bbc3b1548a43ac8ddf1467c5ae34ca
+
+https://api.weatherbit.io/v2.0/forecast/hourly?city=dhaka,bd&key=51bbc3b1548a43ac8ddf1467c5ae34ca&hours=48
