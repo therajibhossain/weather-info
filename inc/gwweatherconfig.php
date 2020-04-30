@@ -28,16 +28,14 @@ trait GWWeatherConfig
         if (!self::$_menu_tabs) {
             $tab_list = array(
                 array(
-                    'title' => 'Settings', 'subtitle' => 'Firstly, you need to add your place in the google map', 'status' => 1, 'fields' => array(
-                    array('name' => 'location', 'title' => 'Location (as in google map)', 'type' => 'textarea'),
+                    'title' => 'Settings', 'subtitle' => 'General Settings', 'status' => 1, 'fields' => array(
+                    array('name' => 'humidity', 'title' => 'Humidity', 'type' => 'checkbox'),
                     array('name' => 'map_width', 'title' => 'Width (100)', 'type' => 'text'),
-                    array('name' => 'map_height', 'title' => 'Height (100)', 'type' => 'text'),
                 ),
                 ),
                 array(
                     'title' => '', 'subtitle' => '', 'status' => 0, 'fields' => array()
                 ),
-
             );
 
             $list = array();
@@ -84,36 +82,6 @@ trait GWWeatherConfig
         $file = fopen(GWGM_LOGS . GWGM_NAME . '.txt', "a");
         echo fwrite($file, "[" . date('d-M-y h:i:s') . "] $type" . $message . "\n");
         fclose($file);
-    }
-
-    public static function db_config()
-    {
-        if (self::$_db_config) {
-            return self::$_db_config;
-        }
-
-        $option_name = 'gwgm_config';
-        if ($db_config = get_option($option_name)) {
-            self::$_db_config = $db_config;
-            return self::$_db_config;
-        }
-
-        $db_config = array();
-        $wp_config = @file_get_contents(get_home_path() . '/wp-config.php', true);
-        if ($wp_config) {
-            $keys = array(
-                'DB_NAME', 'DB_USER', 'DB_PASSWORD', 'DB_HOST'
-            );
-            foreach ($keys as $item) {
-                preg_match("/'" . $item . "',\s*'(.*)?'/", $wp_config, $matches);
-                $db_config[$item] = $matches[1];
-            }
-            if ($db_config) {
-                update_option($option_name, $db_config);
-                self::$_db_config = $db_config;
-            }
-        }
-        return self::$_db_config;
     }
 
     public static function setting_url()

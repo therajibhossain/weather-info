@@ -52,8 +52,8 @@ class GWWeatherSettings
         }
         // This page will be under "Settings"
         add_options_page(
-            'GW Google Map',
-            'GW Google Map',
+            'Weather Info',
+            'Weather Info',
             'manage_options',
             GWW_NAME,
             array($this, 'create_admin_page')

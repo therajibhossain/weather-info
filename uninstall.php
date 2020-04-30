@@ -1,6 +1,6 @@
 <?php
 /**
- * GW_Weather Uninstall.
+ * Weather_Info Uninstall.
  *
  * @package    GW_Weather
  */
