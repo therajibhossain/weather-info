@@ -1,8 +1,11 @@
 <?php
 
-trait GWWeatherConfig
+namespace WeatherInfo;
+trait Config
 {
-    private static $extensions = array(), $_menu_tabs, $option_name, $option_value = array(), $_db_config = array(), $_setting_url, $_location = array();
+    private static $extensions = array(), $_menu_tabs, $option_name, $option_value = array(), $_db_config = array(),
+        $_setting_url, $_location = array();
+    public static $name = GWW_NAME;
 
     private function isExtensionLoaded($extension_name)
     {
@@ -129,5 +132,44 @@ trait GWWeatherConfig
                 </div>';
             }
         }
+    }
+
+    //getting visitor  address
+    public static function visitor_ip()
+    {
+        if (array_key_exists('HTTP_CLIENT_IP', $_SERVER) && $_SERVER['HTTP_CLIENT_IP'])
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        else if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) && $_SERVER['HTTP_X_FORWARDED_FOR'])
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        else if (array_key_exists('HTTP_X_FORWARDED', $_SERVER) && $_SERVER['HTTP_X_FORWARDED'])
+            $ip = $_SERVER['HTTP_X_FORWARDED'];
+        else if (array_key_exists('HTTP_FORWARDED_FOR', $_SERVER) && $_SERVER['HTTP_FORWARDED_FOR'])
+            $ip = $_SERVER['HTTP_FORWARDED_FOR'];
+        else if (array_key_exists('HTTP_FORWARDED', $_SERVER) && $_SERVER['HTTP_FORWARDED'])
+            $ip = $_SERVER['HTTP_FORWARDED'];
+        else if (array_key_exists('REMOTE_ADDR', $_SERVER) && $_SERVER['REMOTE_ADDR'])
+            $ip = $_SERVER['REMOTE_ADDR'];
+        else
+            $ip = '';
+        $ip = '103.133.206.230';
+        return $ip;
+    }
+
+    //getting location data from ipstack.com by ip
+    public static function visitor_location()
+    {
+        if (!self::$_location) {
+            $ip = self::visitor_ip();
+            $option = self::$name . "_location_$ip";
+            $location = get_option($option);
+            if (!$location) {
+                $apiKey = '77706356a9a6fd2584d1159a71f6e843';
+                $url = "http://api.ipstack.com/$ip?access_key=$apiKey";
+                if ($res = file_get_contents($url, false))
+                    update_option($option, json_decode($res, true));
+            }
+            self::$_location = $location;
+        }
+        return self::$_location;
     }
 }

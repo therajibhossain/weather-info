@@ -15,7 +15,8 @@ function gww_autoload($class_name)
         if (file_exists($classpath = dirname(__FILE__) . $dirSep . $folders . $dirSep . $class . '.php')) {
             require_once($classpath);
         } else {
-            wp_die('The ' . $class_name . ' does not exist');
+            if (!strpos($class, 'config'))
+                wp_die('The ' . $class_name . ' does not exist');
         }
     }
 }
