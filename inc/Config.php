@@ -172,4 +172,5 @@ trait Config
         }
         return self::$_location;
     }
+
 }
