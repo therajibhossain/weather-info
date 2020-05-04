@@ -33,7 +33,7 @@ class GWWeather
         register_uninstall_hook($this->filepath, 'GWGMap::plugin_uninstall'); //deactivate hook
 
         add_action('admin_enqueue_scripts', array($this, 'admin_scripts'));
-        new GWWeatherSettings();
+//        new GWWeatherSettings();
         add_action('admin_init', array($this, 'execution'));
     }
 

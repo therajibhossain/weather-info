@@ -23,12 +23,16 @@ class Front
 
     private function openweatherdata($lat, $lon, $part = '')
     {
-        $res = array();
-        $appId = "da52d59e7451b2345fb648365462a4ef";
-        $url = "https://api.openweathermap.org/data/2.5/onecall?lat=$lat&lon=$lon&units=metric&appid=$appId";
-        if ($res = file_get_contents($url, false)) {
-            $res = json_decode($res, true);
+        $result = get_transient('weather_info');
+        if (false === $result) {
+            $appId = "da52d59e7451b2345fb648365462a4ef";
+            $url = "https://api.openweathermap.org/data/2.5/onecall?lat=$lat&lon=$lon&units=metric&appid=$appId";
+            if ($result = file_get_contents($url, false)) {
+                $result = json_decode($result, true);
+                set_transient('weather_info', $result, 1 * HOUR_IN_SECONDS);
+            }
+
         }
-        return $res;
+        return $result;
     }
 }

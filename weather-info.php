@@ -82,7 +82,3 @@ function gww_exe()
 add_action('widgets_init', function () {
     register_widget('WeatherInfo\Widget');
 });
-
-if (is_admin()) {
-    gww_exe();
-}
