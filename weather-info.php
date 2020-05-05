@@ -22,8 +22,8 @@ define('GWW_VERSION', '1.0.0');
 define('GWW_NAME', 'weather-info');
 define('GWW_FILE', plugin_basename(__FILE__));
 define('GWW_URL', plugins_url(GWW_NAME . '/'));
-define('GWW_STYLES', GWW_URL . 'css/');
-define('GWW_SCRIPTS', GWW_URL . 'js/');
+define('GWW_STYLES', GWW_URL . 'assets/css/');
+define('GWW_SCRIPTS', GWW_URL . 'assets/js/');
 define('GWW_LOGS', GWW_DIR_PATH . 'logs/');
 
 //is_requirements_met();
