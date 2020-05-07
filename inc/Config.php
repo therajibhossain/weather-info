@@ -28,10 +28,11 @@ trait Config
 
     public static function option_tabs()
     {
+        $subtitle = "Please note that, this plugin relies on openweathermap.org to get weather & forecast data and also relies on ipstack.com to get visitors` IP location. So you need to set API Key & App ID";
         if (!self::$_menu_tabs) {
             $tab_list = array(
                 array(
-                    'title' => 'Settings', 'subtitle' => 'General Settings', 'status' => 1, 'fields' => array(
+                    'title' => 'Settings', 'subtitle' => $subtitle, 'status' => 1, 'fields' => array(
                     array('name' => 'ipstackapikey', 'title' => '<a href="http://www.ipstack.com" target="_blank">API key to use location from ipstack.com :</a>', 'type' => 'text'),
                     array('name' => 'openweatherapikey', 'title' => '<a href="https://openweathermap.org" target="_blank">APP ID to use weather-data from openweathermap.org :</a>', 'type' => 'text'),
                 ),
