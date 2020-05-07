@@ -1,8 +1,10 @@
 <?php
 
-use GWWeatherConfig as conf;
+namespace WeatherInfo;
 
-class GWWeatherSettings
+use WeatherInfo\Config as conf;
+
+class Settings
 {
     /**
      * Holds the values to be used in the fields callbacks
@@ -67,8 +69,8 @@ class GWWeatherSettings
     {
         ?>
         <style>
-            textarea {
-                width: 80%;
+            text, textarea, #ipstackapikey, #openweatherapikey {
+                width: 60%;
             }
         </style>
         <?php
@@ -130,7 +132,7 @@ class GWWeatherSettings
             <hr>
             <form method="post" action="" class="ajax <?php echo $key ?>" id="<?php echo $key ?>">
                 <?php
-                $this->input_field(array('_token', 'hidden', wp_create_nonce('_wpnonce')));
+                $this->input_field(array('_token', 'hidden', wp_create_nonce('_nonce')));
                 settings_fields('gwgm_option_group');
                 do_settings_sections('setting-' . $key);
                 submit_button();
@@ -214,15 +216,15 @@ class GWWeatherSettings
                 '<textarea id="' . $name . '" name="' . $name . '">%s</textarea>',
                 $arg[2]
             );
+        } elseif ($type === 'text') {
+            printf(
+                '<input type="text" id="' . $name . '" name="' . $full_name . '" value="%s" />',
+                $val
+            );
         } elseif (isset($arg[2])) {
             printf(
                 '<input type="' . $type . '" id="' . $name . '" name="' . $name . '" value="%s" />',
                 $arg[2]
-            );
-        } else {
-            printf(
-                '<input type="text" id="' . $name . '" name="' . $full_name . '" value="%s" />',
-                $val
             );
         }
     }
@@ -240,14 +242,11 @@ class GWWeatherSettings
         /*validating CSRF*/
         $token = sanitize_text_field($form_data['_token']);
         if (!isset($token) || !wp_verify_nonce($token, '_nonce')) wp_die("<br><br>YOU ARE NOT ALLOWED! ");
-        $option_name = sanitize_text_field($_POST['wpb_section']);
-
-        return $this->generate_map($form_data);
+        $option_name = sanitize_text_field($_POST['gwb_section']);
 
         /*sanitizing $_POST['formData'] by option name*/
         $option_value = conf::sanitize_data($form_data[$option_name]);
         if (update_option($option_name, isset($option_value) ? $option_value : '')) {
-            conf::boot_settings($option_name);
             $return = ['response' => 1, 'message' => $option_name . '--- settings updated!'];
         }
         echo json_encode($return);

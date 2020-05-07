@@ -21,17 +21,20 @@ class Front
         return $res;
     }
 
+    //getting weather and forecast data from openweathermap.org
     private function openweatherdata($lat, $lon, $part = '')
     {
         $result = get_transient('weather_info');
         if (false === $result) {
-            $appId = "da52d59e7451b2345fb648365462a4ef";
+            $option_name = Config::option_name()[0];
+            $appId = Config::option_value()[$option_name]['openweatherapikey'];
+//Please note that, this plugin relies on openweathermap.org to get weather & forecast data
             $url = "https://api.openweathermap.org/data/2.5/onecall?lat=$lat&lon=$lon&units=metric&appid=$appId";
-            if ($result = file_get_contents($url, false)) {
+            $result = wp_remote_retrieve_body(wp_remote_get($url));
+            if ($result) {
                 $result = json_decode($result, true);
                 set_transient('weather_info', $result, 1 * HOUR_IN_SECONDS);
             }
-
         }
         return $result;
     }

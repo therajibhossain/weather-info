@@ -18,9 +18,9 @@ trait Config
     public static function option_name()
     {
         if (!self::$option_name) {
-            $prefix = 'gwgm_';
+            $prefix = 'weather_info_';
             self::$option_name = array(
-                $prefix . 'gwg_map', $prefix . 'general_setting',
+                $prefix . 'general_setting', $prefix . 'other_setting',
             );
         }
         return self::$option_name;
@@ -32,8 +32,8 @@ trait Config
             $tab_list = array(
                 array(
                     'title' => 'Settings', 'subtitle' => 'General Settings', 'status' => 1, 'fields' => array(
-                    array('name' => 'humidity', 'title' => 'Humidity', 'type' => 'checkbox'),
-                    array('name' => 'map_width', 'title' => 'Width (100)', 'type' => 'text'),
+                    array('name' => 'ipstackapikey', 'title' => '<a href="http://www.ipstack.com" target="_blank">API key to use location from ipstack.com :</a>', 'type' => 'text'),
+                    array('name' => 'openweatherapikey', 'title' => '<a href="https://openweathermap.org" target="_blank">APP ID to use weather-data from openweathermap.org :</a>', 'type' => 'text'),
                 ),
                 ),
                 array(
@@ -151,7 +151,10 @@ trait Config
             $ip = $_SERVER['REMOTE_ADDR'];
         else
             $ip = '';
-        $ip = '103.133.206.230';
+
+        if ($ip === '::1') {
+            $ip = '103.133.206.230';
+        }
         return $ip;
     }
 
@@ -163,9 +166,13 @@ trait Config
             $option = self::$name . "_location_$ip";
             $location = get_option($option);
             if (!$location) {
-                $apiKey = '77706356a9a6fd2584d1159a71f6e843';
+                $option_name = self::option_name()[0];
+                $apiKey = self::option_value()[$option_name]['ipstackapikey'];
+
+//                Please note that, this plugin relies on ipstack.com to get visitors' IP location
                 $url = "http://api.ipstack.com/$ip?access_key=$apiKey";
-                if ($res = file_get_contents($url, false))
+                $res = wp_remote_retrieve_body(wp_remote_get($url));
+                if ($res)
                     update_option($option, json_decode($res, true));
             }
             self::$_location = $location;

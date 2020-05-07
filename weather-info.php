@@ -78,6 +78,31 @@ function gww_exe()
 }
 
 
+if (is_admin()) {
+    new WeatherInfo\Admin(GWW_VERSION, GWW_FILE);
+} else {
+    //test();
+}
+
+
+
+function testp()
+{
+    $loc = \WeatherInfo\Config::visitor_location();
+    $lat = $loc['latitude'];
+    $lon = $loc['longitude'];
+
+
+    $appId = "da52d59e7451b2345fb648365462a4ef";
+    $url = "https://api.openweathermap.org/data/2.5/onecall?lat=$lat&lon=$lon&units=metric&appid=$appId";
+
+    $result = wp_remote_retrieve_body(wp_remote_get($url));
+    if ($result) {
+        $result = json_decode($result, true);
+    }
+    echo '<pre>', print_r($result), '</pre>', exit();
+}
+
 // Register the widget
 add_action('widgets_init', function () {
     register_widget('WeatherInfo\Widget');
